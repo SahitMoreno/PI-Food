@@ -10,10 +10,10 @@ export default function Paginate({ recipesPerPage, allRecipes, paginado }) {
 
     return(
         <nav>
-            <ul>
+            <ul className={style.ul}>
                 {pageNumbers.map(n => (
-                    <li key={n}>
-                        <button onClick={() => paginado(n)}>{n}</button>
+                    <li className={style.li} key={n}>
+                        <button className={style.button} onClick={() => paginado(n)}>{n}</button>
                     </li>
                 ))}
             </ul>

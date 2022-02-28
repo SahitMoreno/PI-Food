@@ -9,15 +9,6 @@ const initialStae = {
 
 function rootReducer (state = initialStae, action) {
     switch (action.type) {
-        case 'GET_MAYOR':
-            const filtradoMayor = action.payload === 'mayor 80' ?
-            state.allRecipes.filter(d => d.score > 95) :
-            state.allRecipes
-            return {
-                ...state,
-                recipes: filtradoMayor
-            }
-
         case 'GET_RECIPES':
             return {
                 ...state,

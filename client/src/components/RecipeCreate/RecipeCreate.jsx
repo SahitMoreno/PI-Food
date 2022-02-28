@@ -11,10 +11,16 @@ function validate(input) {
         errors.name = "The name of recipe is required";
     } else if (!input.summary) {
         errors.summary = "Summary is required";
-    } else if (input.score > 100) {
+    } else if (!input.image) {
+        errors.image = "The link image of recipe is required";
+    } else if (input.score > 100 || input.score <= 0) {
         errors.score = "The score has to be lower than 100";
-    } else if (input.healthScore > 100) {
+    } else if (input.healthScore > 100  || input.healthScore <= 0) {
         errors.healthScore = "The healt has to be lower than 100";
+    } else if (!input.analyzedInstructions) {
+        errors.analyzedInstructions = "The Steps is required";
+    } else if (input.diets.length === 0) {
+        errors.diets = "Select one type of diet at least";
     }
     return errors;
 }
@@ -26,17 +32,17 @@ export default function RecipeCreate() {
     const [errors, setError] = useState({})
 
     const [input, setInput] = useState({
-        "name": "",
-        "summary": "",
-        "image": "",
-        "score": 0,
-        "healthScore": 0,
-        "analyzedInstructions": "",
-        "diets": [],
+        name: "",
+        summary: "",
+        image: "",
+        score: 0,
+        healthScore: 0,
+        analyzedInstructions: "",
+        diets: [],
     })
 
     useEffect(() => { dispatch(getDiets()) }, [dispatch])
-console.log(diets)
+
 
     function HandleDelete(e, el) {
         e.preventDefault()
@@ -44,12 +50,15 @@ console.log(diets)
             ...input,
             diets: input.diets.filter(d => d !== el)
         })
-        console.log('dentro Delete')
-
+        setError(                          
+            validate({
+                ...input,
+                [e.target.name]: e.target.value,  
+            }))
     }
-    console.log('linea 49')
 
     function handleChange(e) {
+        e.preventDefault()
         setInput({
             ...input,
             [e.target.name]: e.target.value
@@ -63,38 +72,47 @@ console.log(diets)
     }
 
     function handleSelect(e) {
+        e.preventDefault()
         setInput({
             ...input,
             diets: [...input.diets, e.target.value]
         })
+        setError(                          
+            validate({
+                ...input,
+                [e.target.name]: e.target.value,  
+            })
+        );
     }
 
     function handleSubmit(e) {  
+        if(Object.keys(errors).length === 0) { 
         e.preventDefault()
-        console.log('dentro Submit')
         dispatch(postRecipe(input))
         alert('Receta creada con éxito')
         setInput({                          
-            "name": "",
-            "summary": "",
-            "image": "",
-            "score": 0,
-            "healthScore": 0,
-            "analyzedInstructions": "",
-            "diets": []
+            name: "",
+            summary: "",
+            image: "",
+            score: 0,
+            healthScore: 0,
+            analyzedInstructions: "",
+            diets: []
 
         })
         history.push('/home')  
+        }
+        e.preventDefault()
     }
 
     return (
         <div className={style.contains}>
-            <Link to='/home'><button className={style.buttonHome}>BACK</button></Link>
             <form className={style.form}
                 onSubmit={(e) => handleSubmit(e)}>
+            <Link to='/home'><button className={style.button}>BACK</button></Link>
                 <div >
-                    <h1>Create your recipe!</h1>
-                    <p>Recipe name:</p>
+                    <h1>CREATE YOUR RECIPE!</h1>
+                    <h2>Recipe name:</h2>
                     <input className={style.input}
                         type="text"
                         value={input.name}
@@ -106,7 +124,7 @@ console.log(diets)
 
                 </div>
                 <div>
-                    <p>Summary:</p>
+                    <h2>Summary:</h2>
                     <textarea className={style.summary}
                         type="text"
                         value={input.summary}
@@ -117,19 +135,20 @@ console.log(diets)
                     {errors.summary && <p> {errors.summary}</p>}</div>
                 <div>
                     <div>
-                        <p>Optional Image: </p>
+                        <h2>Optional Image: </h2>
                         <input className={style.input}
                             type="text"
                             value={input.image}
+                            required
                             name="image"
                             placeholder="URL image"
                             onChange={(e) => handleChange(e)}
                         />
                     </div>
-                    <p>Score:</p>
+                    <h2>Score:</h2>
                     <input className={style.input}
                         type="number"
-                        value={input.score}
+                        required
                         name="score"
                         onChange={(e) => handleChange(e)}
                     />
@@ -137,10 +156,10 @@ console.log(diets)
 
                 </div>
                 <div>
-                    <p>Health Score:</p>
+                    <h2>Health Score:</h2>
                     <input className={style.input}
                         type="number"
-                        value={input.healthScore}
+                        required
                         name="healthScore"
                         onChange={(e) => handleChange(e)}
                     />
@@ -148,33 +167,33 @@ console.log(diets)
 
                 </div>
                 <div>
-                    <p>Steps:</p>
+                    <h2>Steps:</h2>
                     <textarea className={style.steps}
                         type="textarea"
                         value={input.steps}
+                        required
                         name="analyzedInstructions"
                         onChange={(e) => handleChange(e)}
-                    />
+                        />
+                        {errors.analyzedInstructions && <p> {errors.analyzedInstructions}</p>}
                 </div>
-                <h3>Select diets </h3>
+                    <h2>Select diets:</h2>
                 <select className={style.diets}
-                    onChange={(e) => handleSelect(e)}>
-                    {diets.map((d, index) => (
+                onChange={(e) => handleSelect(e)}>
+                    {diets?.map((d, index) => (
                         <option key={index} value={d.name}>{d.name}</option>
-                    ))}
+                        ))}
                 </select>
-                <ul><li>{input.diets.map(el => el.toUpperCase() + ", ")}</li></ul> 
+                {errors.diets && <p> {errors.diets}</p>}
+                <h3>{input.diets.map(el => el.toUpperCase() + ", ")}</h3> 
                 {input.diets.map((el, index) =>
                     <div key={'typeDiet'+ index} className={style.subcontains}>
-                        <p>{el}</p>
-                        <button className={style.buttonDelete}
-                            onClick={(e) => HandleDelete(e, el)}>X</button>
+                    <button className={style.buttonDelete}
+                    onClick={(e) => HandleDelete(e, el)}>X</button>
+                    <h3>{el}</h3>
                     </div>
-                )}
-                <button className={style.buttonCreate}
-                    type="submit">Crate recipe</button>
-
-
+                    )}
+                <button className={style.buttonCreate} type="submit">Crate recipe</button>
             </form>
 
         </div>

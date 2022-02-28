@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { filterByType, getRecipes, filterByName, filterByScore, getDiets, filterMayor80 } from "../../actions/actions";
+import { filterByType, getRecipes, filterByName, filterByScore, getDiets } from "../../actions/actions";
 import { Link } from "react-router-dom";
 import Card from "../Card/Card";
 import Paginate from "../Paginate/Paginate";
@@ -32,12 +32,6 @@ export default function Home() {
     dispatch(getRecipes())
   }
 
-  function handleFilterMayor(e) {
-    e.preventDefault()
-    dispatch(filterMayor80(e.target.value))
-
-  }
-
   function handleDiets(e) {
     e.preventDefault()
     setCurrentPage(1)
@@ -51,7 +45,6 @@ export default function Home() {
     setOrden(`Ordenado ${e.target.value}`)
   }
 
-
   function handleOrderByScore(e) {
     e.preventDefault()
     dispatch(filterByScore(e.target.value))
@@ -59,21 +52,18 @@ export default function Home() {
     setOrden1(`Ordenado ${e.target.value}`)
   }
 
-
-
-
   return (
 
     <div className={style.container}>
-
-      <Link className={style.button2}
+      <div className={style.head}>
+      <Link className={style.button}
         to="/recipe">CREATE RECIPE</Link>
       <div>
-        <h1 className={style.page}
-        >RECIPE'S PAGE</h1>
+        <h1 className={style.title}
+        >Find Ideal Recipe's for You</h1>
+      </div>
       </div>
       <div className={style.bordercont}>
-
         <SearchBar />
         <select className={style.select}
           onChange={(e) => handleOrderByName(e)}>
@@ -100,17 +90,15 @@ export default function Home() {
           <option value="fodmap friendly"> Fodmap friendly</option>
           <option value="whole 30"> Whole 30</option>
         </select>
-        <button value="mayor 80" onClick={e => handleFilterMayor(e)}> Score mayor 80</button>     
-        <button className={style.button}
-          onClick={e => { handleClick(e) }}>
-          BACK TO ALL RECIPES
+        <button className={style.button} onClick={e => { handleClick(e) }}> 
+          ALL RECIPES
         </button>
 
 
         <div className={style.cards}>
           {currentRecipes?.map((el) => { 
             return ( 
-              <Link className={style.link}
+              <Link className={style.recipe}
               key = {el.ID}
                 to={`recipes/${el.ID}`}>
                 <Card key = {el.ID} id={el.ID} name={el.name} diets={el.diets} image={el.image}/>

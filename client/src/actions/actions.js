@@ -1,5 +1,4 @@
 import axios from 'axios';
-// import { bindActionsCreators } from 'redux';
 
 export const GET_CLEAN = 'GET_CLEAN'
 
@@ -48,13 +47,6 @@ export function filterByName(payload) {
 export function filterByScore(payload) {
     return {
         type: GET_FILTER_BY_SCORE,
-        payload
-    }
-}
-
-export function filterMayor80(payload) {
-    return {
-        type: 'GET_MAYOR',
         payload
     }
 }
