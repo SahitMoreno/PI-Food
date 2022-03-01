@@ -53,7 +53,7 @@ router.get('/', async (req, res) => {
         let recipeName = recipesTotal.filter(d => d.name.toLowerCase().includes(name.toLowerCase()))
         recipeName.length ?
             res.status(200).send(recipeName) :
-            res.status(418).send('La receta no existe')
+            res.status(418).json({ msg: 'La receta no existe' })
     } else {
         res.send(recipesTotal)
     }
@@ -67,7 +67,7 @@ router.get('/:id', async (req, res) => {
         let recipeId = allRecipes.filter(e => e.ID == id) // cambiar aca
         recipeId.length ?
             res.status(200).json(recipeId) :
-            res.status(418).send('No se encontro la receta')
+            res.status(418).json({ msg: 'No se encontro la receta' })
     }
  })
 

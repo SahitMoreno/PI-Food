@@ -38,7 +38,7 @@ function rootReducer (state = initialStae, action) {
         case GET_CLEAN:
             return{
                 ...state,
-                datail: []
+                datail: state.detail.length = 0
             } 
         case 'GET_FILTER_BY_TYPE':
             const recipesByType = action.payload === 'All' ? state.allRecipes :
@@ -47,6 +47,9 @@ function rootReducer (state = initialStae, action) {
                     return r
                 }
             }))
+            if(!recipesByType.length > 0) {
+                alert('No have recipes of ' + action.payload)
+            }
             return {
                 ...state,
                 recipes: recipesByType

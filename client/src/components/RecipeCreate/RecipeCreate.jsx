@@ -7,8 +7,8 @@ import style from "./RecipeCreate.module.css";
 
 function validate(input) {
     let errors = {};
-    if (!input.name) {
-        errors.name = "The name of recipe is required";
+    if (!input.name || /[@!#$%&/0-9]/g.test(input.name)) {
+        errors.name = "A valid name is required (must not have symbols or numbers)";
     } else if (!input.summary) {
         errors.summary = "Summary is required";
     } else if (!input.image) {
@@ -73,10 +73,12 @@ export default function RecipeCreate() {
 
     function handleSelect(e) {
         e.preventDefault()
-        setInput({
-            ...input,
-            diets: [...input.diets, e.target.value]
-        })
+        if(!input.diets.includes(e.target.value) && e.target.value !== 'vacio') {
+            setInput({
+                ...input,
+                diets: [...input.diets, e.target.value]
+            })
+        }
         setError(                          
             validate({
                 ...input,
@@ -120,7 +122,7 @@ export default function RecipeCreate() {
                         name="name"
                         onChange={(e) => handleChange(e)}
                     />
-                    {errors.name && <p> {errors.name}</p>}
+                    {errors.name && <p className={style.err}> {errors.name}</p>}
 
                 </div>
                 <div>
@@ -132,7 +134,7 @@ export default function RecipeCreate() {
                         name="summary"
                         onChange={(e) => handleChange(e)}
                     />
-                    {errors.summary && <p> {errors.summary}</p>}</div>
+                    {errors.summary && <p className={style.err}> {errors.summary}</p>}</div>
                 <div>
                     <div>
                         <h2>Optional Image: </h2>
@@ -152,7 +154,7 @@ export default function RecipeCreate() {
                         name="score"
                         onChange={(e) => handleChange(e)}
                     />
-                    {errors.score && <p> {errors.score}</p>}
+                    {errors.score && <p className={style.err}> {errors.score}</p>}
 
                 </div>
                 <div>
@@ -163,7 +165,7 @@ export default function RecipeCreate() {
                         name="healthScore"
                         onChange={(e) => handleChange(e)}
                     />
-                    {errors.healthScore && <p> {errors.healthScore}</p>}
+                    {errors.healthScore && <p className={style.err}> {errors.healthScore}</p>}
 
                 </div>
                 <div>
@@ -175,17 +177,19 @@ export default function RecipeCreate() {
                         name="analyzedInstructions"
                         onChange={(e) => handleChange(e)}
                         />
-                        {errors.analyzedInstructions && <p> {errors.analyzedInstructions}</p>}
+                        {errors.analyzedInstructions && <p className={style.err}> {errors.analyzedInstructions}</p>}
                 </div>
                     <h2>Select diets:</h2>
                 <select className={style.diets}
                 onChange={(e) => handleSelect(e)}>
+                    <option hidden selected>Diets..</option>
                     {diets?.map((d, index) => (
                         <option key={index} value={d.name}>{d.name}</option>
                         ))}
                 </select>
-                {errors.diets && <p> {errors.diets}</p>}
+                {errors.diets && <p className={style.err}> {errors.diets}</p>}
                 <h3>{input.diets.map(el => el.toUpperCase() + ", ")}</h3> 
+                <div className={style.inputDiets}>
                 {input.diets.map((el, index) =>
                     <div key={'typeDiet'+ index} className={style.subcontains}>
                     <button className={style.buttonDelete}
@@ -193,6 +197,7 @@ export default function RecipeCreate() {
                     <h3>{el}</h3>
                     </div>
                     )}
+                </div>
                 <button className={style.buttonCreate} type="submit">Crate recipe</button>
             </form>
 

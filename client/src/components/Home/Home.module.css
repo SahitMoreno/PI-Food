@@ -98,3 +98,9 @@
   color: lavender;
   margin-bottom: 100px;
 }
+
+.loading{
+    font-family: 'Monsieur La Doulaise';
+    font-size: 60px;
+    color: rgb(255, 255, 255);
+}

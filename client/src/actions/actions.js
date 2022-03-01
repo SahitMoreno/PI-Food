@@ -12,11 +12,16 @@ const GET_DETAIL = 'GET_DETAIL'
 
 export function getRecipes() {
     return async function (dispatch) {
+        try {
         var json = await axios.get('http://localhost:3001/recipes')
         return dispatch({
             type: GET_RECIPES,
             payload: json.data
         })
+        } catch(error) {
+            alert('Opss.. It seems that we are not cooking anything now, please try it later')
+            return error
+        }
     }
 }
 
@@ -60,6 +65,7 @@ export function getNameRecipes(name) { //query
                 payload: json.data
             })
         } catch (error) {
+            alert('The results do not match with the requested name')
             return error
         }
     }
@@ -74,6 +80,7 @@ export function getRecipeDetail(id) { // arreglar?
                 payload: json.data
             })
         } catch (error) {
+            alert('The reques recipe not exist, please return to home page')
             return error
         }
     }
