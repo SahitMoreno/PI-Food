@@ -6,10 +6,11 @@ const { Recipe, conn } = require('../../src/db.js');
 
 const agent = session(app);
 const recipe = {
-  name: 'Milanea a la napolitana',
+  name: 'Milanesa a la napolitana',
+  summary: 'Platillo tipico de Argentina'
 };
 
-describe('Recipe routes', () => {
+describe('Recipes routes', () => {
   before(() => conn.authenticate()
   .catch((err) => {
     console.error('Unable to connect to the database:', err);
@@ -17,8 +18,17 @@ describe('Recipe routes', () => {
   beforeEach(() => Recipe.sync({ force: true })
     .then(() => Recipe.create(recipe)));
   describe('GET /recipes', () => {
-    it('should get 200', () =>
-      agent.get('/recipes').expect(200)
+    it('should get 200', async() =>
+      await agent.get('/recipes').expect(200)
+    );
+    it('should get 200 when send a id from query', () =>
+      agent.get('/recipes/716426').expect(200)
+    );
+    it('should get a json when send a id from query', () =>
+      agent.get('/recipes/716426').expect('Content-Type', /json/)
+    );
+    it('should get 418 with a wrong id', async() =>
+      await agent.get('/recipes/te').expect(418)
     );
   });
 });

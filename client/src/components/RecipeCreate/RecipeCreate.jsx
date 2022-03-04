@@ -44,7 +44,7 @@ export default function RecipeCreate() {
     useEffect(() => { dispatch(getDiets()) }, [dispatch])
 
 
-    function HandleDelete(e, el) {
+    function handleDelete(e, el) {
         e.preventDefault()
         setInput({
             ...input,
@@ -79,6 +79,7 @@ export default function RecipeCreate() {
                 diets: [...input.diets, e.target.value]
             })
         }
+        e.target.value = 'vacio'
         setError(                          
             validate({
                 ...input,
@@ -182,7 +183,7 @@ export default function RecipeCreate() {
                     <h2>Select diets:</h2>
                 <select className={style.diets}
                 onChange={(e) => handleSelect(e)}>
-                    <option hidden selected>Diets..</option>
+                    <option hidden selected value='vacio'>Diets..</option>
                     {diets?.map((d, index) => (
                         <option key={index} value={d.name}>{d.name}</option>
                         ))}
@@ -193,7 +194,7 @@ export default function RecipeCreate() {
                 {input.diets.map((el, index) =>
                     <div key={'typeDiet'+ index} className={style.subcontains}>
                     <button className={style.buttonDelete}
-                    onClick={(e) => HandleDelete(e, el)}>X</button>
+                    onClick={(e) => handleDelete(e, el)}>X</button>
                     <h3>{el}</h3>
                     </div>
                     )}

@@ -34,7 +34,7 @@ module.exports = (sequelize) => {
       type: DataTypes.TEXT,
       allowNull: true,
     },
-    createdInDB: {  //Una vez creado en la DB es mas facil buscarlo a nuevamente hacer peticion
+    createdInDB: { 
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: true
